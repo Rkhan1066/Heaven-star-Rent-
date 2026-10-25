@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heaven Star Home Rent Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2340;
+    --ink-soft:#2B3358;
+    --brass:#B8935B;
+    --brass-light:#D8BE8E;
+    --teal:#2F5D50;
+    --paper:#F7F3EA;
+    --paper-dark:#EFE8D8;
+    --card:#FFFFFF;
+    --line:#DED4BE;
+    --text:#26241E;
+    --text-soft:#6B6455;
+    --danger:#A6432C;
+    --radius:4px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--text);
+    min-height:100vh;
+  }
+  h1,h2,h3,.brand{
+    font-family:'Fraunces',serif;
+  }
+  button{font-family:'Inter',sans-serif;cursor:pointer;}
+  input,select,textarea{font-family:'Inter',sans-serif;}
+
+  /* ===== Login Screen ===== */
+  #loginScreen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(184,147,91,0.10), transparent 45%),
+      radial-gradient(circle at 80% 85%, rgba(47,93,80,0.12), transparent 50%),
+      var(--ink);
+    padding:24px;
+  }
+  .plaque{
+    width:100%;
+    max-width:400px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:44px 40px 36px;
+    position:relative;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.55);
+  }
+  .plaque::before{
+    content:"";
+    position:absolute;
+    top:14px;left:14px;right:14px;bottom:14px;
+    border:1px solid var(--brass);
+    opacity:0.35;
+    pointer-events:none;
+  }
+  .plaque-star{
+    width:34px;height:34px;
+    margin:0 auto 18px;
+    display:block;
+  }
+  .plaque h1{
+    font-size:24px;
+    font-weight:600;
+    text-align:center;
+    margin:0 0 2px;
+    line-height:1.25;
+    color:var(--ink);
+  }
+  .plaque .sub{
+    text-align:center;
+    font-size:12.5px;
+    letter-spacing:0.04em;
+    color:var(--text-soft);
+    margin:0 0 32px;
+  }
+  .field{margin-bottom:18px;}
+  .field label{
+    display:block;
+    font-size:12.5px;
+    color:var(--text-soft);
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--card);
+    font-size:14.5px;
+    color:var(--text);
+    outline:none;
+    transition:border-color .15s;
+  }
+  .field input:focus{border-color:var(--brass);}
+  .btn-primary{
+    width:100%;
+    padding:12px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    border-radius:var(--radius);
+    font-size:14.5px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    margin-top:6px;
+    transition:background .15s;
+  }
+  .btn-primary:hover{background:var(--ink-soft);}
+  #loginError{
+    color:var(--danger);
+    font-size:13px;
+    text-align:center;
+    min-height:18px;
+    margin-top:14px;
+  }
+  .login-hint{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--text-soft);
+    margin-top:20px;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+
+  /* ===== App Shell ===== */
+  #app{display:none; min-height:100vh;}
+  .shell{display:flex; min-height:100vh;}
+  .sidebar{
+    width:230px;
+    flex-shrink:0;
+    background:var(--ink);
+    color:var(--paper);
+    display:flex;
+    flex-direction:column;
+    padding:26px 0;
+  }
+  .sidebar .brand{
+    padding:0 22px 22px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+    margin-bottom:18px;
+  }
+  .sidebar .brand .star-row{display:flex; align-items:center; gap:9px;}
+  .sidebar .brand svg{flex-shrink:0;}
+  .sidebar .brand-text{font-size:16px; font-weight:600; line-height:1.25; color:var(--paper);}
+  .sidebar .brand-text small{display:block; font-size:10.5px; color:var(--brass-light); font-weight:400; letter-spacing:0.03em; margin-top:2px; font-family:'Inter',sans-serif;}
+
+  .nav-item{
+    display:flex; align-items:center; gap:11px;
+    padding:11px 22px;
+    font-size:13.5px;
+    color:#C9CCDA;
+    cursor:pointer;
+    border-left:3px solid transparent;
+    transition:background .12s, color .12s;
+  }
+  .nav-item:hover{background:rgba(255,255,255,0.05); color:var(--paper);}
+  .nav-item.active{
+    background:rgba(184,147,91,0.13);
+    color:var(--paper);
+    border-left-color:var(--brass);
+  }
+  .nav-item svg{width:16px; height:16px; flex-shrink:0;}
+
+  .sidebar-footer{
+    margin-top:auto;
+    padding:16px 22px 0;
+    border-top:1px solid rgba(255,255,255,0.12);
+  }
+  .sidebar-footer .who{font-size:12.5px; color:#9BA0B4; margin-bottom:10px;}
+  .logout-btn{
+    width:100%;
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.25);
+    color:var(--paper);
+    padding:8px;
+    border-radius:var(--radius);
+    font-size:12.5px;
+  }
+  .logout-btn:hover{background:rgba(255,255,255,0.08);}
+
+  .main{
+    flex:1;
+    padding:36px 44px;
+    max-width:1180px;
+  }
+  .page-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:26px; flex-wrap:wrap; gap:14px;
+  }
+  .page-head h2{font-size:23px; font-weight:600; margin:0 0 4px; color:var(--ink);}
+  .page-head p{margin:0; color:var(--text-soft); font-size:13px;}
+  .btn-accent{
+    background:var(--teal);
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:var(--radius);
+    font-size:13.5px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .btn-accent:hover{background:#264a40;}
+  .btn-ghost{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:9px 16px;
+    border-radius:var(--radius);
+    font-size:13px;
+  }
+  .btn-ghost:hover{border-color:var(--brass);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:6px;
+  }
+
+  /* stat strip */
+  .stats{display:flex; gap:16px; margin-bottom:28px; flex-wrap:wrap;}
+  .stat{
+    flex:1; min-width:150px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:3px solid var(--brass);
+    border-radius:4px;
+    padding:16px 18px;
+  }
+  .stat .num{font-family:'Fraunces',serif; font-size:26px; color:var(--ink); font-weight:600;}
+  .stat .lbl{font-size:12px; color:var(--text-soft); margin-top:2px;}
+
+  /* table */
+  .table-wrap{overflow-x:auto;}
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  thead th{
+    text-align:left;
+    padding:12px 16px;
+    font-size:11.5px;
+    color:var(--text-soft);
+    border-bottom:1px solid var(--line);
+    font-weight:600;
+    white-space:nowrap;
+  }
+  tbody td{
+    padding:13px 16px;
+    border-bottom:1px solid var(--paper-dark);
+    vertical-align:top;
+  }
+  tbody tr:hover{background:var(--paper);}
+  tbody tr:last-child td{border-bottom:none;}
+  .name-cell{font-weight:600; color:var(--ink);}
+  .muted{color:var(--text-soft); font-size:12.5px;}
+  .row-actions{display:flex; gap:8px;}
+  .icon-btn{
+    background:transparent; border:1px solid var(--line); border-radius:4px;
+    width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+    color:var(--text-soft);
+  }
+  .icon-btn:hover{border-color:var(--brass); color:var(--ink);}
+  .icon-btn.danger:hover{border-color:var(--danger); color:var(--danger);}
+
+  .empty-state{
+    padding:60px 20px; text-align:center; color:var(--text-soft);
+  }
+  .empty-state h3{color:var(--ink); font-size:17px; margin:14px 0 6px;}
+  .empty-state p{font-size:13.5px; margin:0 0 18px;}
+
+  .search-bar{
+    display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;
+  }
+  .search-bar input{
+    flex:1; min-width:200px;
+    padding:10px 13px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-size:13.5px;
+    background:var(--card);
+  }
+
+  /* form */
+  .form-card{padding:30px 34px; max-width:760px;}
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px 22px;}
+  .form-grid .full{grid-column:1/-1;}
+  .form-field label{
+    display:block; font-size:12.5px; color:var(--text-soft); margin-bottom:6px;
+  }
+  .form-field label .req{color:var(--danger);}
+  .form-field input, .form-field textarea{
+    width:100%; padding:10px 12px;
+    border:1px solid var(--line); border-radius:4px;
+    font-size:14px; background:var(--paper);
+    outline:none; transition:border-color .15s;
+  }
+  .form-field input:focus, .form-field textarea:focus{border-color:var(--brass); background:#fff;}
+  .form-field textarea{resize:vertical; min-height:70px;}
+  .form-actions{
+    display:flex; gap:12px; margin-top:28px;
+    padding-top:22px; border-top:1px solid var(--paper-dark);
+  }
+
+  .toast{
+    position:fixed; bottom:26px; right:26px;
+    background:var(--ink); color:var(--paper);
+    padding:13px 20px; border-radius:5px; font-size:13.5px;
+    box-shadow:0 12px 30px -8px rgba(0,0,0,0.4);
+    opacity:0; transform:translateY(8px);
+    transition:opacity .2s, transform .2s;
+    pointer-events:none; z-index:50;
+    border-left:3px solid var(--brass);
+  }
+  .toast.show{opacity:1; transform:translateY(0);}
+
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(27,35,64,0.55);
+    display:none; align-items:center; justify-content:center; z-index:60; padding:20px;
+  }
+  .modal-backdrop.show{display:flex;}
+  .modal-box{
+    background:var(--paper); border-radius:6px; max-width:420px; width:100%;
+    padding:26px 28px; border:1px solid var(--line);
+  }
+  .modal-box h3{margin:0 0 10px; font-size:17px; color:var(--ink);}
+  .modal-box p{margin:0 0 22px; font-size:13.5px; color:var(--text-soft);}
+  .modal-actions{display:flex; gap:10px; justify-content:flex-end;}
+
+  .detail-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px 26px; padding:26px 30px;}
+  .detail-grid .full{grid-column:1/-1;}
+  .detail-item .k{font-size:11.5px; color:var(--text-soft); margin-bottom:4px;}
+  .detail-item .v{font-size:14.5px; color:var(--text);}
+
+  .settings-section{padding:26px 30px; max-width:520px;}
+  .settings-section h3{font-size:15.5px; margin:0 0 4px; color:var(--ink);}
+  .settings-section .desc{font-size:12.5px; color:var(--text-soft); margin:0 0 20px;}
+
+  /* balance badges */
+  .balance-tag{
+    display:inline-block; padding:3px 9px; border-radius:20px;
+    font-size:12px; font-weight:600;
+  }
+  .balance-due{background:rgba(166,67,44,0.11); color:var(--danger);}
+  .balance-clear{background:rgba(47,93,80,0.13); color:var(--teal);}
+
+  /* radio pills for mode of payment */
+  .pill-group{display:flex; gap:10px; flex-wrap:wrap;}
+  .pill-option{
+    flex:1; min-width:90px;
+    border:1px solid var(--line); border-radius:4px;
+    padding:9px 10px; text-align:center; font-size:13px;
+    cursor:pointer; background:var(--paper); color:var(--text-soft);
+    transition:all .12s;
+  }
+  .pill-option input{display:none;}
+  .pill-option.selected{border-color:var(--brass); background:#fff; color:var(--ink); font-weight:600; box-shadow:inset 0 0 0 1px var(--brass);}
+
+  .calc-box{
+    background:var(--paper); border:1px dashed var(--line); border-radius:4px;
+    padding:14px 16px; margin-top:4px;
+  }
+  .calc-row{display:flex; justify-content:space-between; font-size:13px; color:var(--text-soft); padding:3px 0;}
+  .calc-row.total{border-top:1px solid var(--line); margin-top:6px; padding-top:8px; font-size:14.5px; color:var(--ink); font-weight:600;}
+
+  .file-drop{
+    border:1px dashed var(--line); border-radius:4px; padding:14px 16px;
+    background:var(--paper); font-size:13px; color:var(--text-soft);
+  }
+  .file-drop input{width:100%; font-size:12.5px;}
+  .file-drop .fname{color:var(--ink); font-weight:600; margin-top:6px; font-size:12.5px;}
+
+  .ledger-summary{display:flex; gap:16px; margin-bottom:18px; flex-wrap:wrap;}
+  .ledger-summary .stat{flex:1; min-width:150px;}
+
+  select.form-select{
+    width:100%; padding:10px 12px;
+    border:1px solid var(--line); border-radius:4px;
+    font-size:14px; background:var(--paper); color:var(--text);
+    outline:none;
+  }
+  select.form-select:focus{border-color:var(--brass); background:#fff;}
+
+  .tenant-code{
+    font-family:'Inter',sans-serif; font-size:12px; color:var(--text-soft);
+    background:var(--paper-dark); padding:1px 7px; border-radius:3px;
+  }
+
+  /* ===== Print Agreement ===== */
+  #printAgreement{display:none;}
+  .doc{
+    max-width:760px; margin:0 auto; padding:20px;
+    font-family:'Inter',sans-serif; color:#1c1c1c; font-size:13.5px; line-height:1.6;
+  }
+  .doc-header{
+    display:flex; align-items:center; gap:14px;
+    border-bottom:2px solid var(--ink); padding-bottom:16px; margin-bottom:22px;
+  }
+  .doc-header .doc-title{font-family:'Fraunces',serif; font-size:21px; font-weight:600; color:var(--ink); margin:0;}
+  .doc-header .doc-sub{font-size:11.5px; color:#555; margin-top:2px;}
+  .doc h2.doc-heading{
+    text-align:center; font-family:'Fraunces',serif; font-size:18px;
+    letter-spacing:0.02em; margin:0 0 22px; color:var(--ink);
+  }
+  .doc .parties{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;}
+  .doc .party h4{margin:0 0 8px; font-size:12.5px; color:#555; text-transform:uppercase; letter-spacing:0.03em;}
+  .doc .party p{margin:2px 0;}
+  .doc .clause-list{margin:0; padding:0; list-style:none;}
+  .doc .clause-list li{
+    display:flex; gap:9px; margin-bottom:10px; align-items:flex-start;
+  }
+  .doc .clause-list li .box{
+    flex-shrink:0; width:13px; height:13px; border:1.4px solid #1c1c1c; margin-top:2.5px;
+  }
+  .doc .section-title{
+    font-weight:600; margin:24px 0 10px; font-size:14.5px; color:var(--ink);
+    border-bottom:1px solid #ccc; padding-bottom:4px;
+  }
+  .doc .sign-row{
+    display:flex; justify-content:space-between; margin-top:60px; gap:40px;
+  }
+  .doc .sign-block{flex:1; text-align:center;}
+  .doc .sign-line{border-top:1px solid #1c1c1c; margin-top:50px; padding-top:6px; font-size:12.5px;}
+
+  @media print{
+    body *{visibility:hidden;}
+    #printAgreement, #printAgreement *{visibility:visible;}
+    #printAgreement{display:block; position:absolute; top:0; left:0; width:100%;}
+  }
+
+  @media (max-width: 820px){
+    .shell{flex-direction:column;}
+    .sidebar{width:100%; flex-direction:row; align-items:center; padding:14px 16px; overflow-x:auto;}
+    .sidebar .brand{display:none;}
+    .sidebar-footer{display:none;}
+    .nav-item{border-left:none; border-bottom:3px solid transparent; white-space:nowrap; padding:8px 14px;}
+    .nav-item.active{border-left-color:transparent; border-bottom-color:var(--brass);}
+    .main{padding:24px 18px;}
+    .form-grid{grid-template-columns:1fr;}
+    .detail-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN SCREEN ================= -->
+<div id="loginScreen">
+  <div class="plaque">
+    <svg class="plaque-star" viewBox="0 0 48 48" fill="none">
+      <path d="M24 3 L29.5 18.5 L46 20 L33.5 30 L37.5 46 L24 37 L10.5 46 L14.5 30 L2 20 L18.5 18.5 Z" stroke="#B8935B" stroke-width="1.6" fill="none"/>
+    </svg>
+    <h1>Heaven Star Home Rent Services</h1>
+    <p class="sub">Tenant records &amp; rental register</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginUser">Username</label>
+        <input type="text" id="loginUser" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="loginPass">Password</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-primary">Sign in</button>
+      <div id="loginError"></div>
+    </form>
+    <div class="login-hint">First time here? Default login is <strong>admin</strong> / <strong>admin123</strong> — change it from Settings after signing in.</div>
+  </div>
+</div>
+
+<!-- ================= APP SHELL ================= -->
+<div id="app">
+  <div class="shell">
+    <div class="sidebar">
+      <div class="brand">
+        <div class="star-row">
+          <svg width="22" height="22" viewBox="0 0 48 48" fill="none">
+            <path d="M24 3 L29.5 18.5 L46 20 L33.5 30 L37.5 46 L24 37 L10.5 46 L14.5 30 L2 20 L18.5 18.5 Z" stroke="#D8BE8E" stroke-width="2" fill="none"/>
+          </svg>
+          <div class="brand-text">Heaven Star
+            <small>Home Rent Services</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-item active" data-page="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-page="tenants">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Tenants
+      </div>
+      <div class="nav-item" data-page="addTenant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+        Add New Tenant
+      </div>
+      <div class="nav-item" data-page="addPayment">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Add Payment
+      </div>
+      <div class="nav-item" data-page="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="who">Signed in as <strong id="whoUser">-</strong></div>
+        <button class="logout-btn" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="page" id="page-dashboard">
+        <div class="page-head">
+          <div>
+            <h2>Dashboard</h2>
+            <p>An overview of your rental register.</p>
+          </div>
+          <button class="btn-accent" onclick="goTo('addPayment')">+ Add Payment</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Total tenants on record</div></div>
+          <div class="stat"><div class="num" id="statDue">₹0</div><div class="lbl">Collection needed this month</div></div>
+          <div class="stat"><div class="num" id="statCollected">₹0</div><div class="lbl">Collected this month</div></div>
+          <div class="stat"><div class="num" id="statOutstanding">₹0</div><div class="lbl">Total outstanding (all tenants)</div></div>
+        </div>
+        <div class="page-head" style="margin-bottom:14px;">
+          <div><h2 style="font-size:17px;">Recent Tenants</h2></div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="dashboardTableWrap"></div>
+        </div>
+      </div>
+
+      <!-- TENANTS LIST -->
+      <div class="page" id="page-tenants" style="display:none;">
+        <div class="page-head">
+          <div>
+            <h2>Tenants</h2>
+            <p>All tenant records in the master list.</p>
+          </div>
+          <button class="btn-accent" onclick="goTo('addTenant')">+ Add New Tenant</button>
+        </div>
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search by name, mobile, Aadhar No. or address...">
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="tenantsTableWrap"></div>
+        </div>
+      </div>
+
+      <!-- ADD / EDIT TENANT -->
+      <div class="page" id="page-addTenant" style="display:none;">
+        <div class="page-head">
+          <div>
+            <h2 id="tenantFormTitle">Add New Tenant</h2>
+            <p>Enter the tenant's details for the master record.</p>
+          </div>
+        </div>
+        <div class="card form-card">
+          <form id="tenantForm">
+            <input type="hidden" id="tenantId">
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="f_name">Tenant Name <span class="req">*</span></label>
+                <input type="text" id="f_name" required>
+              </div>
+              <div class="form-field">
+                <label for="f_father">Father / Husband Name</label>
+                <input type="text" id="f_father">
+              </div>
+              <div class="form-field">
+                <label for="f_mobile">Mobile No. <span class="req">*</span> <span class="muted" style="font-size:11.5px;">— used as Tenant Code</span></label>
+                <input type="tel" id="f_mobile" required>
+              </div>
+              <div class="form-field">
+                <label for="f_aadhar">Aadhar No.</label>
+                <input type="text" id="f_aadhar" maxlength="14" placeholder="XXXX XXXX XXXX">
+              </div>
+              <div class="form-field full">
+                <label for="f_address">Full Address</label>
+                <textarea id="f_address"></textarea>
+              </div>
+              <div class="form-field">
+                <label for="f_lastplace">Last Place of Rent</label>
+                <input type="text" id="f_lastplace">
+              </div>
+              <div class="form-field">
+                <label for="f_reference">Reference</label>
+                <input type="text" id="f_reference">
+              </div>
+              <div class="form-field">
+                <label for="f_rent">Agreed Monthly Rent (₹) <span class="req">*</span></label>
+                <input type="number" id="f_rent" min="0" step="1" required>
+              </div>
+              <div class="form-field">
+                <label for="f_elecrate">Electricity Rate (₹ per unit)</label>
+                <input type="number" id="f_elecrate" min="0" step="0.01" placeholder="Leave blank to use the default rate">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-accent">Save Tenant</button>
+              <button type="button" class="btn-ghost" onclick="cancelTenantForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ADD PAYMENT -->
+      <div class="page" id="page-addPayment" style="display:none;">
+        <div class="page-head">
+          <div>
+            <h2>Add Rent Payment</h2>
+            <p>Record a payment against a tenant's ledger.</p>
+          </div>
+        </div>
+        <div class="card form-card">
+          <form id="paymentForm">
+            <div class="form-grid">
+              <div class="form-field full">
+                <label for="p_tenant">Mobile No. (Tenant Code) <span class="req">*</span></label>
+                <select id="p_tenant" class="form-select" required>
+                  <option value="">Select tenant by mobile no.</option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="p_date">Date of Payment <span class="req">*</span></label>
+                <input type="date" id="p_date" required>
+              </div>
+              <div class="form-field">
+                <label for="p_month">For Which Month <span class="req">*</span></label>
+                <input type="month" id="p_month" required>
+              </div>
+
+              <div class="form-field full">
+                <label>Payment Type <span class="req">*</span></label>
+                <select id="p_type" class="form-select" required>
+                  <option value="">Choose payment type</option>
+                  <option value="Rent">Rent</option>
+                  <option value="Electricity">Electricity</option>
+                  <option value="Other Services">Other Services</option>
+                  <option value="Advance">Advance</option>
+                </select>
+              </div>
+
+              <!-- Generic amount (Rent / Other Services / Advance) -->
+              <div class="form-field full" id="genericAmountField">
+                <label for="p_amount">Amount (₹) <span class="req">*</span></label>
+                <input type="number" id="p_amount" min="0" step="1">
+              </div>
+
+              <!-- Electricity calculator -->
+              <div class="form-field full" id="electricityFields" style="display:none;">
+                <label>Electricity — Meter Units &amp; Rate</label>
+                <div class="form-grid" style="grid-template-columns:1fr 1fr; gap:14px;">
+                  <div class="form-field">
+                    <label for="p_units" class="muted">Meter Units Consumed</label>
+                    <input type="number" id="p_units" min="0" step="0.01">
+                  </div>
+                  <div class="form-field">
+                    <label for="p_rate" class="muted">Rate per Unit (₹)</label>
+                    <input type="number" id="p_rate" min="0" step="0.01">
+                  </div>
+                </div>
+                <div class="calc-box">
+                  <div class="calc-row"><span>Units × Rate</span><span id="calcUnitsRate">0 × ₹0.00</span></div>
+                  <div class="calc-row total"><span>Electricity Amount</span><span id="calcElecTotal">₹0</span></div>
+                </div>
+              </div>
+
+              <div class="form-field full">
+                <label>Mode of Payment <span class="req">*</span></label>
+                <div class="pill-group" id="modeGroup">
+                  <label class="pill-option" data-val="Cash"><input type="radio" name="p_mode" value="Cash">Cash</label>
+                  <label class="pill-option" data-val="UPI"><input type="radio" name="p_mode" value="UPI">UPI</label>
+                  <label class="pill-option" data-val="Other"><input type="radio" name="p_mode" value="Other">Other</label>
+                </div>
+              </div>
+              <div class="form-field full" id="modeOtherField" style="display:none;">
+                <label for="p_modeOther">Please specify</label>
+                <input type="text" id="p_modeOther" placeholder="e.g. Bank transfer, Cheque">
+              </div>
+
+              <div class="form-field full">
+                <label for="p_proof">Proof of Payment (optional attachment)</label>
+                <div class="file-drop">
+                  <input type="file" id="p_proof" accept="image/*,application/pdf">
+                  <div class="fname" id="p_proofName"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-accent">Save Payment</button>
+              <button type="button" class="btn-ghost" onclick="goTo('dashboard')">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- TENANT DETAIL (read-only view) -->
+      <div class="page" id="page-tenantDetail" style="display:none;">
+        <div class="page-head">
+          <div>
+            <h2 id="detailName">Tenant</h2>
+            <p>Full record from the master list.</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-ghost" onclick="openAgreementModal()">Print Agreement</button>
+            <button class="btn-ghost" onclick="recordPaymentForCurrent()">Add Payment</button>
+            <button class="btn-ghost" onclick="editFromDetail()">Edit</button>
+            <button class="btn-ghost" onclick="goTo('tenants')">Back to list</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:22px;">
+          <div class="detail-grid" id="detailGrid"></div>
+        </div>
+
+        <div class="page-head" style="margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:18px;">Ledger</h2>
+            <p>Rent is added automatically on the 1st of every month. Balance updates once a payment is recorded.</p>
+          </div>
+        </div>
+        <div class="ledger-summary">
+          <div class="stat"><div class="num" id="ledgerTotalDue">₹0</div><div class="lbl">Total charged to date</div></div>
+          <div class="stat"><div class="num" id="ledgerTotalPaid">₹0</div><div class="lbl">Total collected to date</div></div>
+          <div class="stat"><div class="num" id="ledgerBalance">₹0</div><div class="lbl">Current balance</div></div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="ledgerTableWrap"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings" style="display:none;">
+        <div class="page-head">
+          <div>
+            <h2>Settings</h2>
+            <p>Manage master data and your login.</p>
+          </div>
+        </div>
+
+        <div class="card settings-section" style="margin-bottom:20px;">
+          <h3>Master Data</h3>
+          <p class="desc">Tenant information is the master data for this application.</p>
+          <button class="btn-accent" onclick="goTo('addTenant')">+ Add New Tenant</button>
+        </div>
+
+        <div class="card settings-section" style="margin-bottom:20px;">
+          <h3>Organization Details</h3>
+          <p class="desc">Shown on the header and signature block of the printed rental agreement.</p>
+          <form id="orgForm">
+            <div class="form-field" style="margin-bottom:14px;">
+              <label for="s_ownername">Owner / Authorized Signatory Name</label>
+              <input type="text" id="s_ownername" placeholder="e.g. Ramesh Kumar">
+            </div>
+            <div class="form-field" style="margin-bottom:14px;">
+              <label for="s_ownercontact">Contact Number</label>
+              <input type="text" id="s_ownercontact" placeholder="e.g. 98765 43210">
+            </div>
+            <div class="form-field" style="margin-bottom:14px;">
+              <label for="s_orgaddress">Office Address (optional)</label>
+              <input type="text" id="s_orgaddress" placeholder="Shown under the organization name">
+            </div>
+            <button type="submit" class="btn-accent">Save Details</button>
+          </form>
+        </div>
+
+        <div class="card settings-section" style="margin-bottom:20px;">
+          <h3>Electricity Rate</h3>
+          <p class="desc">Default rate per unit used to pre-fill the electricity payment calculator. It can still be edited on each payment.</p>
+          <form id="rateForm">
+            <div class="form-field" style="margin-bottom:14px;">
+              <label for="s_rate">Rate per Unit (₹)</label>
+              <input type="number" id="s_rate" min="0" step="0.01">
+            </div>
+            <button type="submit" class="btn-accent">Save Rate</button>
+          </form>
+        </div>
+
+        <div class="card settings-section">
+          <h3>Change Login Password</h3>
+          <p class="desc">Update the username and password used to sign in.</p>
+          <form id="credsForm">
+            <div class="form-field" style="margin-bottom:16px;">
+              <label for="s_username">Username</label>
+              <input type="text" id="s_username" required>
+            </div>
+            <div class="form-field" style="margin-bottom:16px;">
+              <label for="s_currentpass">Current Password</label>
+              <input type="password" id="s_currentpass" required>
+            </div>
+            <div class="form-field" style="margin-bottom:16px;">
+              <label for="s_newpass">New Password</label>
+              <input type="password" id="s_newpass" placeholder="Leave blank to keep current password">
+            </div>
+            <div id="credsError" style="color:#A6432C; font-size:13px; margin-bottom:10px;"></div>
+            <button type="submit" class="btn-accent">Save Changes</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-backdrop" id="deleteModal">
+  <div class="modal-box">
+    <h3>Delete this tenant record?</h3>
+    <p>This will permanently remove <strong id="deleteName"></strong> from the master list. This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn-accent" style="background:#A6432C" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Agreement details modal -->
+<div class="modal-backdrop" id="agreementModal">
+  <div class="modal-box" style="max-width:460px;">
+    <h3>Print Rental Agreement</h3>
+    <p>Fill in the terms specific to this agreement before printing.</p>
+    <div class="form-field" style="margin-bottom:14px;">
+      <label for="ag_date">Agreement Date</label>
+      <input type="date" id="ag_date">
+    </div>
+    <div class="form-field" style="margin-bottom:14px;">
+      <label for="ag_duration">Agreement Duration (months)</label>
+      <input type="number" id="ag_duration" min="1" step="1" value="11">
+    </div>
+    <div class="form-field" style="margin-bottom:14px;">
+      <label for="ag_deposit">Security Deposit (₹, optional)</label>
+      <input type="number" id="ag_deposit" min="0" step="1" placeholder="0">
+    </div>
+    <div class="form-field" style="margin-bottom:6px;">
+      <label for="ag_duedate">Rent Due Date Each Month</label>
+      <input type="text" id="ag_duedate" value="1st">
+    </div>
+    <div class="modal-actions" style="margin-top:18px;">
+      <button class="btn-ghost" onclick="closeAgreementModal()">Cancel</button>
+      <button class="btn-accent" onclick="printAgreement()">Print Agreement</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Print-only rental agreement -->
+<div id="printAgreement"></div>
+
+<script>
+// Android: replace Claude's window.storage with on-device localStorage
+if(!window.storage){
+  window.storage = {
+    get: async function(k){ var v = localStorage.getItem(k); return v === null ? null : { value: v }; },
+    set: async function(k, v){ localStorage.setItem(k, v); return true; }
+  };
+}
+// Android: route window.print() to the native print dialog
+if(window.AndroidBridge){ window.print = function(){ window.AndroidBridge.print(); }; }
+</script>
+<script>
+// ============ Storage keys ============
+const CREDS_KEY = "app:credentials";
+const TENANTS_KEY = "app:tenants";
+const LEDGER_KEY = "app:ledger";
+const SETTINGS_KEY = "app:settings";
+
+let tenants = [];
+let ledger = [];
+let appSettings = { electricityRate: 0 };
+let editingId = null;
+let pendingDeleteId = null;
+
+// ============ Helpers ============
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+function escapeHtml(str){
+  if(str === undefined || str === null) return "";
+  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+
+function genId(){
+  return 't_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+}
+
+async function safeGet(key){
+  try{
+    const res = await window.storage.get(key, false);
+    return res ? JSON.parse(res.value) : null;
+  }catch(e){
+    return null;
+  }
+}
+async function safeSet(key, value){
+  try{
+    await window.storage.set(key, JSON.stringify(value), false);
+    return true;
+  }catch(e){
+    console.error('storage set failed', e);
+    return false;
+  }
+}
+
+// ============ Auth ============
+async function ensureCredentials(){
+  let creds = await safeGet(CREDS_KEY);
+  if(!creds){
+    creds = { username: 'admin', password: 'admin123' };
+    await safeSet(CREDS_KEY, creds);
+  }
+  return creds;
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+  const creds = await ensureCredentials();
+  if(u === creds.username && p === creds.password){
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('whoUser').textContent = creds.username;
+    document.getElementById('s_username').value = creds.username;
+    await loadTenants();
+    await loadLedger();
+    await loadSettings();
+    document.getElementById('s_rate').value = appSettings.electricityRate || '';
+    document.getElementById('s_ownername').value = appSettings.ownerName || '';
+    document.getElementById('s_ownercontact').value = appSettings.ownerContact || '';
+    document.getElementById('s_orgaddress').value = appSettings.orgAddress || '';
+    await ensureRentCharges();
+    populatePaymentTenantSelect();
+    goTo('dashboard');
+  } else {
+    errEl.textContent = 'Incorrect username or password.';
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginForm').reset();
+});
+
+document.getElementById('credsForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const errEl = document.getElementById('credsError');
+  errEl.textContent = '';
+  const creds = await ensureCredentials();
+  const current = document.getElementById('s_currentpass').value;
+  if(current !== creds.password){
+    errEl.textContent = 'Current password is incorrect.';
+    return;
+  }
+  const newUsername = document.getElementById('s_username').value.trim() || creds.username;
+  const newPass = document.getElementById('s_newpass').value;
+  const updated = { username: newUsername, password: newPass ? newPass : creds.password };
+  const ok = await safeSet(CREDS_KEY, updated);
+  if(ok){
+    document.getElementById('whoUser').textContent = updated.username;
+    document.getElementById('s_currentpass').value = '';
+    document.getElementById('s_newpass').value = '';
+    showToast('Login details updated.');
+  } else {
+    errEl.textContent = 'Could not save changes. Please try again.';
+  }
+});
+
+document.getElementById('orgForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  appSettings.ownerName = document.getElementById('s_ownername').value.trim();
+  appSettings.ownerContact = document.getElementById('s_ownercontact').value.trim();
+  appSettings.orgAddress = document.getElementById('s_orgaddress').value.trim();
+  await saveSettings();
+  showToast('Organization details saved.');
+});
+
+document.getElementById('rateForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  appSettings.electricityRate = Number(document.getElementById('s_rate').value) || 0;
+  await saveSettings();
+  showToast('Default electricity rate saved.');
+});
+
+// ============ Navigation ============
+const pages = ['dashboard','tenants','addTenant','addPayment','tenantDetail','settings'];
+function goTo(page, opts){
+  pages.forEach(p=>{
+    document.getElementById('page-'+p).style.display = (p===page) ? 'block' : 'none';
+  });
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.page === page);
+  });
+  if(page === 'addTenant' && !(opts && opts.keepForm)){
+    resetTenantForm();
+  }
+  if(page === 'addPayment' && !(opts && opts.keepForm)){
+    resetPaymentForm();
+  }
+  if(page === 'dashboard') renderDashboard();
+  if(page === 'tenants') renderTenantsTable();
+}
+
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click', ()=> goTo(el.dataset.page));
+});
+
+// ============ Tenant data ============
+async function loadTenants(){
+  tenants = (await safeGet(TENANTS_KEY)) || [];
+}
+async function saveTenants(){
+  await safeSet(TENANTS_KEY, tenants);
+}
+
+// ============ Ledger data ============
+async function loadLedger(){
+  ledger = (await safeGet(LEDGER_KEY)) || [];
+}
+async function saveLedger(){
+  await safeSet(LEDGER_KEY, ledger);
+}
+async function loadSettings(){
+  appSettings = (await safeGet(SETTINGS_KEY)) || { electricityRate: 0 };
+}
+async function saveSettings(){
+  await safeSet(SETTINGS_KEY, appSettings);
+}
+
+function fmtMoney(n){
+  const v = Number(n) || 0;
+  return '₹' + v.toLocaleString('en-IN', {maximumFractionDigits:2});
+}
+function ymKey(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+function dateStr(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function monthsBetween(startDate, endDate){
+  const list = [];
+  let d = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+  const end = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+  while(d <= end){
+    list.push(new Date(d));
+    d.setMonth(d.getMonth()+1);
+  }
+  return list;
+}
+
+// Auto-adds a "Rent Due" ledger charge on the 1st of every month, per tenant,
+// from the month the tenant was added through the current month.
+async function ensureRentCharges(){
+  let changed = false;
+  const today = new Date();
+  tenants.forEach(t=>{
+    const rent = Number(t.rent);
+    if(!rent || rent <= 0) return;
+    const start = new Date(t.createdAt || Date.now());
+    const months = monthsBetween(start, today);
+    months.forEach(m=>{
+      const fm = ymKey(m);
+      const exists = ledger.some(e => e.tenantId === t.id && e.category === 'Rent' && e.auto && e.forMonth === fm);
+      if(!exists){
+        ledger.push({
+          id: genId(),
+          tenantId: t.id,
+          date: dateStr(m),
+          forMonth: fm,
+          category: 'Rent',
+          debit: rent,
+          credit: 0,
+          note: 'Rent due',
+          auto: true,
+          createdAt: Date.now()
+        });
+        changed = true;
+      }
+    });
+  });
+  if(changed) await saveLedger();
+}
+
+function tenantEntries(tenantId){
+  return ledger.filter(e => e.tenantId === tenantId).sort((a,b)=> a.date.localeCompare(b.date) || a.createdAt-b.createdAt);
+}
+function tenantBalance(tenantId){
+  return tenantEntries(tenantId).reduce((bal,e)=> bal + (e.debit||0) - (e.credit||0), 0);
+}
+function currentMonthKey(){
+  return ymKey(new Date());
+}
+function monthDueTotal(monthKey){
+  return ledger.filter(e=>e.forMonth===monthKey).reduce((s,e)=>s+(e.debit||0),0);
+}
+function monthCollectedTotal(monthKey){
+  return ledger.filter(e=>e.forMonth===monthKey).reduce((s,e)=>s+(e.credit||0),0);
+}
+function totalOutstanding(){
+  return tenants.reduce((s,t)=> s + tenantBalance(t.id), 0);
+}
+
+function resetTenantForm(){
+  editingId = null;
+  document.getElementById('tenantFormTitle').textContent = 'Add New Tenant';
+  document.getElementById('tenantForm').reset();
+  document.getElementById('tenantId').value = '';
+}
+
+function fillTenantForm(t){
+  editingId = t.id;
+  document.getElementById('tenantFormTitle').textContent = 'Edit Tenant';
+  document.getElementById('tenantId').value = t.id;
+  document.getElementById('f_name').value = t.name || '';
+  document.getElementById('f_father').value = t.father || '';
+  document.getElementById('f_mobile').value = t.mobile || '';
+  document.getElementById('f_aadhar').value = t.aadhar || '';
+  document.getElementById('f_address').value = t.address || '';
+  document.getElementById('f_lastplace').value = t.lastplace || '';
+  document.getElementById('f_reference').value = t.reference || '';
+  document.getElementById('f_rent').value = t.rent || '';
+  document.getElementById('f_elecrate').value = t.electricityRate || '';
+}
+
+function cancelTenantForm(){
+  goTo(editingId ? 'tenants' : 'dashboard');
+}
+
+document.getElementById('tenantForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const record = {
+    id: editingId || genId(),
+    name: document.getElementById('f_name').value.trim(),
+    father: document.getElementById('f_father').value.trim(),
+    mobile: document.getElementById('f_mobile').value.trim(),
+    aadhar: document.getElementById('f_aadhar').value.trim(),
+    address: document.getElementById('f_address').value.trim(),
+    lastplace: document.getElementById('f_lastplace').value.trim(),
+    reference: document.getElementById('f_reference').value.trim(),
+    rent: Number(document.getElementById('f_rent').value) || 0,
+    electricityRate: Number(document.getElementById('f_elecrate').value) || 0,
+    createdAt: editingId ? (tenants.find(t=>t.id===editingId)||{}).createdAt || Date.now() : Date.now()
+  };
+  if(editingId){
+    tenants = tenants.map(t => t.id === editingId ? record : t);
+  } else {
+    tenants.push(record);
+  }
+  await saveTenants();
+  await ensureRentCharges();
+  populatePaymentTenantSelect();
+  showToast(editingId ? 'Tenant record updated.' : 'Tenant added to master list.');
+  resetTenantForm();
+  goTo('tenants');
+});
+
+// ============ Rendering ============
+function balanceTagHtml(tenantId){
+  const bal = tenantBalance(tenantId);
+  if(bal > 0){
+    return `<span class="balance-tag balance-due">${fmtMoney(bal)} due</span>`;
+  }
+  if(bal < 0){
+    return `<span class="balance-tag balance-clear">${fmtMoney(Math.abs(bal))} advance</span>`;
+  }
+  return `<span class="balance-tag balance-clear">Settled</span>`;
+}
+
+function tenantRowHtml(t){
+  return `<tr>
+    <td class="name-cell">${escapeHtml(t.name)}</td>
+    <td><span class="tenant-code">${escapeHtml(t.mobile)}</span></td>
+    <td>${escapeHtml(t.father) || '<span class="muted">—</span>'}</td>
+    <td>${t.rent ? fmtMoney(t.rent) : '<span class="muted">—</span>'}</td>
+    <td>${balanceTagHtml(t.id)}</td>
+    <td>
+      <div class="row-actions">
+        <button class="icon-btn" title="View" onclick="viewTenant('${t.id}')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+        <button class="icon-btn" title="Edit" onclick="editTenant('${t.id}')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </button>
+        <button class="icon-btn danger" title="Delete" onclick="askDeleteTenant('${t.id}')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+        </button>
+      </div>
+    </td>
+  </tr>`;
+}
+
+function emptyStateHtml(text, sub){
+  return `<div class="empty-state">
+    <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#B8935B" stroke-width="1.3" style="margin:0 auto;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <h3>${text}</h3>
+    <p>${sub}</p>
+    <button class="btn-accent" onclick="goTo('addTenant')">+ Add New Tenant</button>
+  </div>`;
+}
+
+const tableHeadRow = `<tr><th>Tenant Name</th><th>Mobile No. (Code)</th><th>Father/Husband Name</th><th>Monthly Rent</th><th>Balance</th><th></th></tr>`;
+
+async function renderDashboard(){
+  await ensureRentCharges();
+  document.getElementById('statTotal').textContent = tenants.length;
+  const mk = currentMonthKey();
+  document.getElementById('statDue').textContent = fmtMoney(monthDueTotal(mk));
+  document.getElementById('statCollected').textContent = fmtMoney(monthCollectedTotal(mk));
+  document.getElementById('statOutstanding').textContent = fmtMoney(totalOutstanding());
+
+  const wrap = document.getElementById('dashboardTableWrap');
+  if(tenants.length === 0){
+    wrap.innerHTML = emptyStateHtml('No tenants on record yet', 'Add your first tenant to start the master list.');
+    return;
+  }
+  const recent = [...tenants].sort((a,b)=>b.createdAt-a.createdAt).slice(0,6);
+  wrap.innerHTML = `<table>
+    <thead>${tableHeadRow}</thead>
+    <tbody>${recent.map(tenantRowHtml).join('')}</tbody>
+  </table>`;
+}
+
+function renderTenantsTable(){
+  const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  const wrap = document.getElementById('tenantsTableWrap');
+  let list = tenants;
+  if(q){
+    list = tenants.filter(t =>
+      (t.name||'').toLowerCase().includes(q) ||
+      (t.mobile||'').toLowerCase().includes(q) ||
+      (t.aadhar||'').toLowerCase().includes(q) ||
+      (t.address||'').toLowerCase().includes(q)
+    );
+  }
+  if(tenants.length === 0){
+    wrap.innerHTML = emptyStateHtml('No tenants on record yet', 'Add your first tenant to start the master list.');
+    return;
+  }
+  if(list.length === 0){
+    wrap.innerHTML = `<div class="empty-state"><h3>No matches</h3><p>Try a different search term.</p></div>`;
+    return;
+  }
+  const sorted = [...list].sort((a,b)=> (a.name||'').localeCompare(b.name||''));
+  wrap.innerHTML = `<table>
+    <thead>${tableHeadRow}</thead>
+    <tbody>${sorted.map(tenantRowHtml).join('')}</tbody>
+  </table>`;
+}
+
+document.getElementById('searchInput').addEventListener('input', renderTenantsTable);
+
+let detailTenantId = null;
+function ledgerRowHtml(e, runningBalance){
+  const label = e.category === 'Electricity' && e.units != null
+    ? `Electricity — ${e.units} units × ₹${e.ratePerUnit}`
+    : (e.note || (e.debit && !e.credit ? e.category + ' due' : e.category + ' collected'));
+  const modeText = e.mode ? (e.mode === 'Other' ? (e.modeOther || 'Other') : e.mode) : '';
+  return `<tr>
+    <td class="muted">${e.date}</td>
+    <td class="muted">${e.forMonth}</td>
+    <td>${escapeHtml(e.category)}${modeText ? `<div class="muted" style="font-size:11.5px;">${escapeHtml(modeText)}</div>` : ''}</td>
+    <td class="muted">${escapeHtml(label)}</td>
+    <td>${e.debit ? fmtMoney(e.debit) : '<span class="muted">—</span>'}</td>
+    <td>${e.credit ? fmtMoney(e.credit) : '<span class="muted">—</span>'}</td>
+    <td class="name-cell">${fmtMoney(runningBalance)}</td>
+  </tr>`;
+}
+
+function renderTenantLedger(tenantId){
+  const entries = tenantEntries(tenantId);
+  const totalDue = entries.reduce((s,e)=>s+(e.debit||0),0);
+  const totalPaid = entries.reduce((s,e)=>s+(e.credit||0),0);
+  document.getElementById('ledgerTotalDue').textContent = fmtMoney(totalDue);
+  document.getElementById('ledgerTotalPaid').textContent = fmtMoney(totalPaid);
+  document.getElementById('ledgerBalance').textContent = fmtMoney(totalDue - totalPaid);
+
+  const wrap = document.getElementById('ledgerTableWrap');
+  if(entries.length === 0){
+    wrap.innerHTML = `<div class="empty-state"><h3>No ledger entries yet</h3><p>Rent will be added automatically on the 1st of the month once a monthly rent amount is set.</p></div>`;
+    return;
+  }
+  let running = 0;
+  const rows = entries.map(e=>{
+    running += (e.debit||0) - (e.credit||0);
+    return ledgerRowHtml(e, running);
+  }).join('');
+  wrap.innerHTML = `<table>
+    <thead><tr><th>Date</th><th>For Month</th><th>Category</th><th>Details</th><th>Charge</th><th>Collected</th><th>Balance</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function viewTenant(id){
+  const t = tenants.find(x=>x.id===id);
+  if(!t) return;
+  detailTenantId = id;
+  document.getElementById('detailName').textContent = t.name;
+  document.getElementById('detailGrid').innerHTML = `
+    <div class="detail-item"><div class="k">Tenant Name</div><div class="v">${escapeHtml(t.name)}</div></div>
+    <div class="detail-item"><div class="k">Father / Husband Name</div><div class="v">${escapeHtml(t.father) || '—'}</div></div>
+    <div class="detail-item"><div class="k">Mobile No. (Tenant Code)</div><div class="v">${escapeHtml(t.mobile)}</div></div>
+    <div class="detail-item"><div class="k">Aadhar No.</div><div class="v">${escapeHtml(t.aadhar) || '—'}</div></div>
+    <div class="detail-item full"><div class="k">Full Address</div><div class="v">${escapeHtml(t.address) || '—'}</div></div>
+    <div class="detail-item"><div class="k">Last Place of Rent</div><div class="v">${escapeHtml(t.lastplace) || '—'}</div></div>
+    <div class="detail-item"><div class="k">Reference</div><div class="v">${escapeHtml(t.reference) || '—'}</div></div>
+    <div class="detail-item"><div class="k">Monthly Rent</div><div class="v">${t.rent ? fmtMoney(t.rent) : '—'}</div></div>
+    <div class="detail-item"><div class="k">Electricity Rate</div><div class="v">${t.electricityRate ? fmtMoney(t.electricityRate) + ' / unit' : 'Default rate'}</div></div>
+  `;
+  renderTenantLedger(id);
+  goTo('tenantDetail');
+}
+
+function editTenant(id){
+  const t = tenants.find(x=>x.id===id);
+  if(!t) return;
+  goTo('addTenant', {keepForm:true});
+  fillTenantForm(t);
+}
+
+function editFromDetail(){
+  if(detailTenantId) editTenant(detailTenantId);
+}
+
+function recordPaymentForCurrent(){
+  if(!detailTenantId) return;
+  goTo('addPayment');
+  document.getElementById('p_tenant').value = detailTenantId;
+}
+
+// ============ Print Agreement ============
+function openAgreementModal(){
+  if(!detailTenantId) return;
+  document.getElementById('ag_date').value = dateStr(new Date());
+  document.getElementById('ag_duration').value = 11;
+  document.getElementById('ag_deposit').value = '';
+  document.getElementById('ag_duedate').value = '1st';
+  document.getElementById('agreementModal').classList.add('show');
+}
+function closeAgreementModal(){
+  document.getElementById('agreementModal').classList.remove('show');
+}
+
+function ordinalMonthsLater(dateISO, months){
+  const d = new Date(dateISO + 'T00:00:00');
+  d.setMonth(d.getMonth() + Number(months || 0));
+  return dateStr(d);
+}
+function prettyDate(iso){
+  if(!iso) return '—';
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
+}
+
+const STAR_SVG = '<svg width="30" height="30" viewBox="0 0 48 48" fill="none"><path d="M24 3 L29.5 18.5 L46 20 L33.5 30 L37.5 46 L24 37 L10.5 46 L14.5 30 L2 20 L18.5 18.5 Z" stroke="#1B2340" stroke-width="1.8" fill="none"/></svg>';
+
+function printAgreement(){
+  const t = tenants.find(x=>x.id===detailTenantId);
+  if(!t){ closeAgreementModal(); return; }
+
+  const agDate = document.getElementById('ag_date').value || dateStr(new Date());
+  const duration = Number(document.getElementById('ag_duration').value) || 11;
+  const deposit = Number(document.getElementById('ag_deposit').value) || 0;
+  const dueDate = document.getElementById('ag_duedate').value.trim() || '1st';
+  const endDate = ordinalMonthsLater(agDate, duration);
+  const elecRate = t.electricityRate || appSettings.electricityRate || 0;
+
+  const clauses = [
+    `The Tenant shall pay a monthly rent of ${fmtMoney(t.rent)} on or before the ${escapeHtml(dueDate)} of every month.`,
+    `This agreement is valid for a period of ${duration} month(s), commencing ${prettyDate(agDate)} and ending ${prettyDate(endDate)}, and may be renewed by mutual written consent.`,
+    deposit > 0 ? `The Tenant has paid a refundable security deposit of ${fmtMoney(deposit)}, refundable at the end of the tenancy after adjusting any dues or damages.` : `No security deposit has been collected under this agreement.`,
+    elecRate > 0 ? `Electricity charges shall be billed as per the actual meter reading at the rate of ${fmtMoney(elecRate)} per unit, payable separately from the rent.` : `Electricity charges shall be billed separately as per actual consumption.`,
+    `The Tenant shall use the premises for residential purposes only and shall not sublet, assign, or share the premises without the prior written consent of the Owner.`,
+    `The Tenant shall maintain the premises in good condition and shall be responsible for any damage caused beyond normal wear and tear.`,
+    `Either party may terminate this agreement by giving one month's written notice in advance.`,
+    `The Tenant shall bear the cost of any other services (water, maintenance, internet, etc.) as applicable, unless otherwise agreed in writing.`,
+    `Any dispute arising from this agreement shall be settled amicably, and failing that, through the appropriate local jurisdiction.`
+  ];
+
+  const html = `
+    <div class="doc">
+      <div class="doc-header">
+        ${STAR_SVG}
+        <div>
+          <p class="doc-title">Heaven Star Home Rent Services</p>
+          <p class="doc-sub">${escapeHtml(appSettings.orgAddress || 'Tenant records & rental register')}</p>
+        </div>
+      </div>
+      <h2 class="doc-heading">Rental Agreement</h2>
+
+      <div class="parties">
+        <div class="party">
+          <h4>Owner / Landlord</h4>
+          <p><strong>Heaven Star Home Rent Services</strong></p>
+          ${appSettings.ownerName ? `<p>${escapeHtml(appSettings.ownerName)}</p>` : ''}
+          ${appSettings.ownerContact ? `<p>Contact: ${escapeHtml(appSettings.ownerContact)}</p>` : ''}
+        </div>
+        <div class="party">
+          <h4>Tenant</h4>
+          <p><strong>${escapeHtml(t.name)}</strong></p>
+          ${t.father ? `<p>S/o, D/o, W/o: ${escapeHtml(t.father)}</p>` : ''}
+          <p>Mobile: ${escapeHtml(t.mobile)} (Tenant Code)</p>
+          ${t.aadhar ? `<p>Aadhar No.: ${escapeHtml(t.aadhar)}</p>` : ''}
+          ${t.address ? `<p>Address: ${escapeHtml(t.address)}</p>` : ''}
+        </div>
+      </div>
+
+      <p>This Rental Agreement is made on <strong>${prettyDate(agDate)}</strong> between Heaven Star Home Rent Services (the "Owner") and the above-named Tenant, on the following terms and conditions:</p>
+
+      <div class="section-title">Terms &amp; Conditions</div>
+      <ul class="clause-list">
+        ${clauses.map(c=>`<li><span class="box"></span><span>${c}</span></li>`).join('')}
+      </ul>
+
+      <p style="margin-top:20px;">Both parties, having read and understood the above terms, agree to be bound by them.</p>
+
+      <div class="sign-row">
+        <div class="sign-block">
+          <div class="sign-line">For Heaven Star Home Rent Services${appSettings.ownerName ? ' — ' + escapeHtml(appSettings.ownerName) : ''}</div>
+        </div>
+        <div class="sign-block">
+          <div class="sign-line">Tenant — ${escapeHtml(t.name)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('printAgreement').innerHTML = html;
+  closeAgreementModal();
+  setTimeout(()=> window.print(), 50);
+}
+
+function askDeleteTenant(id){
+  const t = tenants.find(x=>x.id===id);
+  if(!t) return;
+  pendingDeleteId = id;
+  document.getElementById('deleteName').textContent = t.name;
+  document.getElementById('deleteModal').classList.add('show');
+}
+function closeDeleteModal(){
+  pendingDeleteId = null;
+  document.getElementById('deleteModal').classList.remove('show');
+}
+document.getElementById('confirmDeleteBtn').addEventListener('click', async ()=>{
+  if(!pendingDeleteId) return;
+  tenants = tenants.filter(t=>t.id !== pendingDeleteId);
+  ledger = ledger.filter(e=>e.tenantId !== pendingDeleteId);
+  await saveTenants();
+  await saveLedger();
+  populatePaymentTenantSelect();
+  closeDeleteModal();
+  showToast('Tenant record deleted.');
+  renderDashboard();
+  renderTenantsTable();
+});
+
+// ============ Add Payment page ============
+function populatePaymentTenantSelect(){
+  const sel = document.getElementById('p_tenant');
+  const current = sel.value;
+  const sorted = [...tenants].sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  sel.innerHTML = '<option value="">Select tenant by mobile no.</option>' +
+    sorted.map(t=>`<option value="${t.id}">${escapeHtml(t.mobile)} — ${escapeHtml(t.name)}</option>`).join('');
+  if(sorted.some(t=>t.id===current)) sel.value = current;
+}
+
+function resetPaymentForm(){
+  document.getElementById('paymentForm').reset();
+  document.getElementById('p_date').value = dateStr(new Date());
+  document.getElementById('p_month').value = currentMonthKey();
+  document.getElementById('p_rate').value = appSettings.electricityRate || '';
+  document.getElementById('genericAmountField').style.display = 'block';
+  document.getElementById('electricityFields').style.display = 'none';
+  document.getElementById('modeOtherField').style.display = 'none';
+  document.querySelectorAll('.pill-option').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('p_proofName').textContent = '';
+  updateElectricityCalc();
+}
+
+document.getElementById('p_type').addEventListener('change', (e)=>{
+  const isElec = e.target.value === 'Electricity';
+  document.getElementById('electricityFields').style.display = isElec ? 'block' : 'none';
+  document.getElementById('genericAmountField').style.display = isElec ? 'none' : 'block';
+  if(isElec) applyTenantElectricityRate();
+});
+
+function applyTenantElectricityRate(){
+  const t = tenants.find(x=>x.id === document.getElementById('p_tenant').value);
+  const rate = (t && t.electricityRate) ? t.electricityRate : (appSettings.electricityRate || 0);
+  document.getElementById('p_rate').value = rate || '';
+  updateElectricityCalc();
+}
+document.getElementById('p_tenant').addEventListener('change', ()=>{
+  if(document.getElementById('p_type').value === 'Electricity') applyTenantElectricityRate();
+});
+
+document.querySelectorAll('#modeGroup .pill-option').forEach(label=>{
+  label.addEventListener('click', ()=>{
+    document.querySelectorAll('#modeGroup .pill-option').forEach(el=>el.classList.remove('selected'));
+    label.classList.add('selected');
+    label.querySelector('input').checked = true;
+    document.getElementById('modeOtherField').style.display = label.dataset.val === 'Other' ? 'block' : 'none';
+  });
+});
+
+function updateElectricityCalc(){
+  const units = Number(document.getElementById('p_units').value) || 0;
+  const rate = Number(document.getElementById('p_rate').value) || 0;
+  const total = units * rate;
+  document.getElementById('calcUnitsRate').textContent = units + ' × ₹' + rate.toFixed(2);
+  document.getElementById('calcElecTotal').textContent = fmtMoney(total);
+}
+document.getElementById('p_units').addEventListener('input', updateElectricityCalc);
+document.getElementById('p_rate').addEventListener('input', updateElectricityCalc);
+
+let pendingProof = null;
+document.getElementById('p_proof').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  pendingProof = null;
+  if(!file) { document.getElementById('p_proofName').textContent = ''; return; }
+  document.getElementById('p_proofName').textContent = file.name;
+  if(file.size > 1000000){
+    pendingProof = { name: file.name, dataUrl: null };
+    showToast('File is large — only the filename will be saved, not the image.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = ()=>{ pendingProof = { name: file.name, dataUrl: reader.result }; };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('paymentForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const tenantId = document.getElementById('p_tenant').value;
+  if(!tenantId){ showToast('Please select a tenant.'); return; }
+  const type = document.getElementById('p_type').value;
+  if(!type){ showToast('Please choose a payment type.'); return; }
+  const modeInput = document.querySelector('#modeGroup input[name="p_mode"]:checked');
+  if(!modeInput){ showToast('Please select a mode of payment.'); return; }
+  const mode = modeInput.value;
+  const modeOther = mode === 'Other' ? document.getElementById('p_modeOther').value.trim() : '';
+
+  let amount = 0, units = null, ratePerUnit = null;
+  if(type === 'Electricity'){
+    units = Number(document.getElementById('p_units').value) || 0;
+    ratePerUnit = Number(document.getElementById('p_rate').value) || 0;
+    amount = units * ratePerUnit;
+  } else {
+    amount = Number(document.getElementById('p_amount').value) || 0;
+  }
+  if(amount <= 0){ showToast('Please enter a valid amount.'); return; }
+
+  const isBillAndCollect = (type === 'Electricity' || type === 'Other Services');
+  const entry = {
+    id: genId(),
+    tenantId,
+    date: document.getElementById('p_date').value,
+    forMonth: document.getElementById('p_month').value,
+    category: type,
+    debit: isBillAndCollect ? amount : 0,
+    credit: amount,
+    mode, modeOther,
+    proofName: pendingProof ? pendingProof.name : '',
+    proofDataUrl: pendingProof ? pendingProof.dataUrl : null,
+    units, ratePerUnit,
+    note: type + ' collected',
+    auto: false,
+    createdAt: Date.now()
+  };
+  ledger.push(entry);
+  await saveLedger();
+  showToast('Payment recorded.');
+  pendingProof = null;
+  resetPaymentForm();
+  viewTenant(tenantId);
+});
+
+// ============ Init ============
+(async function init(){
+  await ensureCredentials();
+})();
+</script>
+</body>
+</html>
